@@ -33,7 +33,7 @@ describe("norm", () => {
   });
 });
 
-describe("부족 재료 계산 (§6.1)", () => {
+describe("부족 재료 계산", () => {
   it("물은 항상 가진 것", () => {
     expect(missingIngredients([ing("물", 200, "ml")], cond({ ingredients: [], seasonings: [] }))).toEqual([]);
   });
@@ -58,7 +58,7 @@ describe("부족 재료 계산 (§6.1)", () => {
   });
 });
 
-describe("내 재료 사용 판정 (§6.2)", () => {
+describe("내 재료 사용 판정", () => {
   it("선택 재료를 하나라도 쓰면 인정", () => {
     expect(usesSelectedIngredient(recipe(), ["계란"])).toBe(true);
   });
@@ -67,7 +67,7 @@ describe("내 재료 사용 판정 (§6.2)", () => {
   });
 });
 
-describe("후보 검사 (§6.3)", () => {
+describe("후보 검사", () => {
   const ok = (r: Recipe, c = cond(), avoid: string[] = []) => filterCandidates([r], c, avoid).length === 1;
 
   it("불 사용 15분은 통과, 16분은 탈락", () => {
@@ -137,7 +137,7 @@ describe("후보 검사 (§6.3)", () => {
   });
 });
 
-describe("조건 변경 재검사 (§5.8)", () => {
+describe("조건 변경 재검사", () => {
   it("선택 재료를 빼면 안 맞는 후보가 빠진다", () => {
     const a = recipe({ id: "a", ingredients: [ing("대파")] });
     const b = recipe({ id: "b", name: "계란찜", ingredients: [ing("계란")] });
@@ -145,7 +145,7 @@ describe("조건 변경 재검사 (§5.8)", () => {
   });
 });
 
-describe("못 먹는 재료 매칭 (§6.4)", () => {
+describe("못 먹는 재료 매칭", () => {
   it("새우는 새우젓·새우볶음밥을 막는다", () => {
     expect(violatesExclusions({ name: "애호박볶음", ingredients: [ing("새우젓")] }, ["새우"])).toBe(true);
     expect(violatesExclusions({ name: "새우볶음밥", ingredients: [ing("밥")] }, ["새우"])).toBe(true);
@@ -158,7 +158,7 @@ describe("못 먹는 재료 매칭 (§6.4)", () => {
   });
 });
 
-describe("인분 환산 (§6.5)", () => {
+describe("인분 환산", () => {
   it("2→4는 두 배, 2→1은 절반", () => {
     expect(scaleIngredients([ing("대파", 1, "대")], 2, 4)[0].amount).toBe(2);
     expect(scaleIngredients([ing("계란", 3)], 2, 1)[0].amount).toBe(1.5);
@@ -190,7 +190,7 @@ describe("인분 환산 (§6.5)", () => {
   });
 });
 
-describe("장바구니 문구 (§5.10)", () => {
+describe("장바구니 문구", () => {
   it("일반 형식", () => {
     expect(buildShareText("김치볶음밥", 2, [ing("대파", 1, "대"), ing("간장", 1.5, "큰술")])).toBe(
       "🛒 장바구니 — 김치볶음밥 (2인분)\n- 대파 1대\n- 간장 1.5큰술",

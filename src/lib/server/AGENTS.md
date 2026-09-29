@@ -25,5 +25,6 @@
 
 ## 테스트
 - `handlers.test.ts`: 순서(암호 틀림이면 본문이 깨져도 401, AI 호출 0회), 한글 암호, 설정 오류 500, 본문 한도 각각 400, 502.
+- `contract.test.ts`: 화면 `requestCandidates`가 실제로 보내는 본문을 `handleCandidates`에 그대로 넣어 200·후보 모양 확인, 화면 한도를 꽉 채운 본문도 통과, 한도 +1이면 400. 본문 한도는 `src/lib/presets.ts`·`validation.ts` 상수를 가져다 쓴다(숫자를 따로 적지 않는다).
 - `generate.test.ts`: 규칙 위반 제거, 보충 정확히 1회와 피할 이름 구성, 합치기 중복 제거·8개 상한, 보충 실패 → 첫 통과분, 예산 15초 경계(15초 정확히면 보충 함), 시간 초과 시 중단.
 - `ai/providers.test.ts`: 회사별 가짜 SDK 응답 → 후보 배열, 깨진 응답·거부·잘림·SDK 오류 → `AiError`, 회사·모델 선택.

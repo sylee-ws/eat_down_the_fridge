@@ -12,7 +12,7 @@ import {
 } from "./presets";
 import type { Favorite, Recipe } from "./types";
 
-/** 이 기기에 기억하는 설정 한 덩어리 (spec §6.6) */
+/** 이 기기에 기억하는 설정 한 덩어리 */
 export type Settings = {
   version: 1;
   selectedIngredients: string[];
@@ -74,7 +74,7 @@ export function isChosen(s: Settings, kind: TagKind, name: string): boolean {
   return s[chosenKey(kind)].includes(name);
 }
 
-/** 제외 단어에 걸려 흐리게 보이고 선택할 수 없는 태그인가 (spec §5.4) */
+/** 제외 단어에 걸려 흐리게 보이고 선택할 수 없는 태그인가 */
 export function isTagBlocked(s: Settings, name: string): boolean {
   return isBlockedName(name, s.exclusions);
 }
@@ -96,7 +96,7 @@ export function toggleTag(s: Settings, kind: TagKind, name: string): Update {
   return select(s, kind, name);
 }
 
-/** 직접 입력 (spec §5.2): 이미 있으면 그 태그를 선택, 새 것이면 만들고 바로 선택 */
+/** 직접 입력: 이미 있으면 그 태그를 선택, 새 것이면 만들고 바로 선택 */
 export function addCustomTag(s: Settings, kind: TagKind, input: string): Update {
   const name = norm(input);
   if (name.length === 0) return { settings: s, notice: "empty" };
@@ -121,7 +121,7 @@ export function removeCustomTag(s: Settings, kind: TagKind, name: string): Updat
 
 // ---------- 못 먹는 재료 ----------
 
-/** 추가하는 순간 걸리는 재료·양념 선택을 자동 해제한다 (spec §5.4) */
+/** 추가하는 순간 걸리는 재료·양념 선택을 자동 해제한다 (다시 지워도 자동 재선택 없음) */
 export function addExclusion(s: Settings, input: string): Update {
   const word = norm(input);
   if (word.length === 0) return { settings: s, notice: "empty" };
@@ -162,7 +162,7 @@ export function isFavorite(s: Settings, recipeId: string): boolean {
   return s.favorites.some((f) => f.recipe.id === recipeId);
 }
 
-/** 같은 레시피 id면 해제, 아니면 맨 앞(최신)에 저장 (spec §5.11) */
+/** 같은 레시피 id면 해제, 아니면 맨 앞(최신)에 저장 */
 export function toggleFavorite(s: Settings, recipe: Recipe, servings: number, now: Date = new Date()): Update {
   if (isFavorite(s, recipe.id)) return removeFavorite(s, recipe.id);
   const fav: Favorite = { recipe, savedServings: clampServings(servings), savedAt: now.toISOString() };

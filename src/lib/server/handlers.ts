@@ -38,7 +38,7 @@ function describeError(e: unknown, secrets: string[]): string {
   return msg.slice(0, 500);
 }
 
-/** POST /api/verify-passcode (spec §7.1) */
+/** POST /api/verify-passcode */
 export async function handleVerifyPasscode(request: Request, env: Env): Promise<Response> {
   const expected = readPasscode(env);
   if (expected === null) return misconfigured();
@@ -53,7 +53,7 @@ export type CandidatesDeps = {
   newId?: () => string;
 };
 
-/** POST /api/candidates (spec §7.2) */
+/** POST /api/candidates */
 export async function handleCandidates(request: Request, env: Env, deps: CandidatesDeps = {}): Promise<Response> {
   const now = deps.now ?? Date.now;
   const startedAt = now();

@@ -4,7 +4,7 @@ import { filterCandidates, toRecipe } from "@/lib/validation";
 import { AiError, asAiError, type AiProvider, type PromptInput } from "./ai/types";
 import type { CandidatesRequest } from "./requestBody";
 
-/** 조정 가능한 값 (spec §7.2) */
+/** 조정 가능한 값 */
 export const CANDIDATE_COUNT = 6;
 export const MAX_CANDIDATES = 8;
 export const MIN_PASSING = 3;
@@ -54,7 +54,7 @@ function rawNames(items: unknown[]): string[] {
 }
 
 /**
- * 후보 생성 (spec §7.2 처리 1~3).
+ * 후보 생성: AI 호출 → 검사 → 필요하면 1회 보충.
  * 첫 호출 실패는 AiError를 던진다. 보충은 통과분이 3개 미만일 때 딱 1번,
  * 남은 예산이 15초 이상일 때만 하고, 보충 실패는 무시한다.
  */

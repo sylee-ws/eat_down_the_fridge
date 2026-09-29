@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { avoidNames, emptyBoard, markShown, newBoard, nextAction, recheck, remaining, AVOID_LIMIT } from "./board";
+import { avoidNames, emptyBoard, landedWinner, markShown, newBoard, nextAction, recheck, remaining, AVOID_LIMIT } from "./board";
 import type { Conditions, Recipe } from "./types";
 
 function recipe(id: string, name: string, ingNames: string[] = ["계란"]): Recipe {
@@ -106,5 +106,23 @@ describe("board", () => {
     expect(avoid[0]).toBe("요리10");
     expect(avoid[49]).toBe("요리59");
     expect(new Set(avoid).size).toBe(50);
+  });
+
+  it("멈춘 당첨이 지금 판에 남아 있으면 그 후보", () => {
+    const b = newBoard(emptyBoard(), [recipe("1", "계란찜", ["계란"]), recipe("2", "파전", ["대파"])]);
+    expect(landedWinner(b, "2")?.name).toBe("파전");
+  });
+
+  it("회전 중 재검사로 빠진 당첨은 결과로 쓰지 않는다", () => {
+    const b = newBoard(emptyBoard(), [recipe("1", "계란찜", ["계란"]), recipe("2", "새우파전", ["대파", "새우"])]);
+    const r = recheck(b, { ...cond, exclusions: ["새우"] });
+    expect(landedWinner(r, "2")).toBeNull();
+    expect(nextAction(r).kind).toBe("direct");
+  });
+
+  it("이미 나온 후보나 판에 없는 id도 결과로 쓰지 않는다", () => {
+    const b = markShown(newBoard(emptyBoard(), [recipe("1", "계란찜"), recipe("2", "계란말이")]), "1");
+    expect(landedWinner(b, "1")).toBeNull();
+    expect(landedWinner(b, "x")).toBeNull();
   });
 });

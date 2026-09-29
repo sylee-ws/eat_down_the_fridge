@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { DEFAULT_OWNED_SEASONINGS, LIST_LIMIT, PRESET_INGREDIENTS } from "./presets";
+import { DEFAULT_OWNED_SEASONINGS, LIST_LIMIT, NAME_MAX_LENGTH, PRESET_INGREDIENTS } from "./presets";
 import {
   addCustomTag,
   addExclusion,
@@ -30,7 +30,7 @@ const recipe = (id: string): Recipe => ({
 
 const base = (over: Partial<Settings> = {}): Settings => ({ ...defaultSettings(), ...over });
 
-describe("재료 태그 (§5.2)", () => {
+describe("재료 태그", () => {
   it("토글로 선택/해제", () => {
     let s = toggleTag(base(), "ingredient", "대파").settings;
     expect(s.selectedIngredients).toEqual(["대파"]);
@@ -74,7 +74,7 @@ describe("재료 태그 (§5.2)", () => {
   });
 });
 
-describe("보유 양념 (§5.3)", () => {
+describe("보유 양념", () => {
   it("처음엔 기본 양념이 체크돼 있다", () => {
     expect(defaultSettings().ownedSeasonings).toEqual(DEFAULT_OWNED_SEASONINGS);
   });
@@ -86,7 +86,7 @@ describe("보유 양념 (§5.3)", () => {
   });
 });
 
-describe("못 먹는 재료 (§5.4)", () => {
+describe("못 먹는 재료", () => {
   it("추가하는 순간 걸리는 재료·양념 선택이 풀린다", () => {
     const s0 = base({ selectedIngredients: ["우유", "계란"], ownedSeasonings: ["소금", "우유버터"] });
     const s = addExclusion(s0, "우유").settings;
@@ -117,7 +117,7 @@ describe("못 먹는 재료 (§5.4)", () => {
   });
 });
 
-describe("인분 (§5.5)", () => {
+describe("인분", () => {
   it("1~4로 제한", () => {
     expect(setServings(base(), 7).settings.servings).toBe(4);
     expect(setServings(base(), 0).settings.servings).toBe(1);
@@ -125,7 +125,7 @@ describe("인분 (§5.5)", () => {
   });
 });
 
-describe("즐겨찾기 (§5.11)", () => {
+describe("즐겨찾기", () => {
   it("같은 id면 토글, 최신이 맨 앞", () => {
     const now = new Date("2026-09-29T00:00:00Z");
     let s = toggleFavorite(base(), recipe("a"), 2, now).settings;
@@ -140,7 +140,7 @@ describe("즐겨찾기 (§5.11)", () => {
   });
 });
 
-describe("기기 저장 (§6.6)", () => {
+describe("기기 저장", () => {
   it("없거나 깨진 저장값은 기본값", () => {
     expect(parseSettings(null)).toEqual(defaultSettings());
     expect(parseSettings("{not json")).toEqual(defaultSettings());
@@ -154,6 +154,33 @@ describe("기기 저장 (§6.6)", () => {
     expect(s.servings).toBe(2);
     expect(s.favorites).toEqual([]);
     expect(s.ownedSeasonings).toEqual(DEFAULT_OWNED_SEASONINGS);
+  });
+
+  it("한도를 넘는 저장값은 앞에서부터 30개만, 20자 넘는 이름은 버린다", () => {
+    const many = Array.from({ length: 40 }, (_, i) => `재료${i}`);
+    const long = "가".repeat(NAME_MAX_LENGTH + 1);
+    const ok = "나".repeat(NAME_MAX_LENGTH);
+    const s = parseSettings(
+      JSON.stringify({
+        version: 1,
+        selectedIngredients: [long, ...many],
+        customIngredients: [long, ok],
+        ownedSeasonings: many,
+        customSeasonings: [long],
+        exclusions: [ok, long, ...many],
+      }),
+    );
+    expect(s.selectedIngredients).toEqual(many.slice(0, LIST_LIMIT));
+    expect(s.ownedSeasonings).toEqual(many.slice(0, LIST_LIMIT));
+    expect(s.exclusions).toEqual([ok, ...many.slice(0, LIST_LIMIT - 1)]);
+    expect(s.customIngredients).toEqual([ok]);
+    expect(s.customSeasonings).toEqual([]);
+  });
+
+  it("이름 길이는 공백을 지운 뒤 글자 수로 센다", () => {
+    const spaced = " " + "가 ".repeat(NAME_MAX_LENGTH);
+    const s = parseSettings(JSON.stringify({ version: 1, selectedIngredients: [spaced] }));
+    expect(s.selectedIngredients).toEqual(["가".repeat(NAME_MAX_LENGTH)]);
   });
 
   it("저장했다 불러오면 그대로", () => {

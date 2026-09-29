@@ -1,4 +1,4 @@
-/** 레시피 재료 1줄 (spec §4) */
+/** 레시피 재료 1줄 */
 export type RecipeIngredient = {
   /** 짧은 일반명사. 사용자 재료/양념을 쓸 땐 사용자가 쓴 이름 그대로 */
   name: string;

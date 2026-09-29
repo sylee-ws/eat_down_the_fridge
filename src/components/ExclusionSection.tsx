@@ -9,7 +9,7 @@ export const ALLERGY_NOTE = "AI가 만든 레시피예요. 알레르기 재료�
 
 type Props = { settings: Settings; onUpdate: (u: Update) => void };
 
-/** 못 먹는 재료 (spec §5.4) */
+/** 못 먹는 재료 — 이름에 들어간 것까지 막는다 */
 export default function ExclusionSection({ settings, onUpdate }: Props) {
   return (
     <section className={styles.section} aria-labelledby="sec-exclusion">

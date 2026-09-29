@@ -13,7 +13,7 @@ const isObj = (v: unknown): v is Record<string, unknown> =>
 
 /**
  * AI가 준 알 수 없는 값을 Recipe 모양으로 옮긴다. 모양 자체가 틀리면 null.
- * servings는 AI 값과 무관하게 요청 인분으로 덮어쓴다 (spec §7.2 처리 2).
+ * servings는 AI 값과 무관하게 요청 인분으로 덮어쓴다.
  * 값의 범위 검사는 여기서 하지 않고 checkStructural에서 한다.
  */
 export function toRecipe(raw: unknown, id: string, servings: number): Recipe | null {
@@ -44,7 +44,7 @@ export function toRecipe(raw: unknown, id: string, servings: number): Recipe | n
 
 const intIn = (v: number, min: number, max: number) => Number.isInteger(v) && v >= min && v <= max;
 
-/** 생성 시점 규칙 1~5 중 한 후보만 보고 판정 가능한 것 (판 내 중복은 filterCandidates) — spec §6.3 */
+/** 생성 시점 구조 규칙(요리명 40자·피할 이름, 불 15분·손질 10분, 3~4단계, 재료 모양) — 판 내 중복은 filterCandidates */
 export function checkStructural(recipe: Recipe, avoidDishNames: string[]): boolean {
   const n = norm(recipe.name);
   if (n.length === 0 || Array.from(n).length > MAX_DISH_NAME_LENGTH) return false;
@@ -61,7 +61,7 @@ export function checkStructural(recipe: Recipe, avoidDishNames: string[]): boole
   return true;
 }
 
-/** 조건 의존 규칙 6~8 — 생성 시점과 조건 변경 재검사(spec §5.8)에 모두 쓴다 */
+/** 조건 의존 규칙(선택 재료 1개 이상 사용, 부족 재료 3개 이하, 못 먹는 재료 없음) — 생성 시점과 조건 변경 재검사에 모두 쓴다 */
 export function checkConditional(recipe: Recipe, cond: Conditions): boolean {
   if (!usesSelectedIngredient(recipe, cond.ingredients)) return false;
   if (missingIngredients(recipe.ingredients, cond).length > MAX_MISSING) return false;
@@ -69,13 +69,13 @@ export function checkConditional(recipe: Recipe, cond: Conditions): boolean {
   return true;
 }
 
-/** 조건 의존 규칙만 다시 적용 (spec §5.8 재검사). 순서 유지. */
+/** 조건이 바뀌었을 때 조건 의존 규칙만 다시 적용. 순서 유지. */
 export function recheckCandidates(candidates: Recipe[], cond: Conditions): Recipe[] {
   return candidates.filter((r) => checkConditional(r, cond));
 }
 
 /**
- * 후보 검사 전체 (spec §6.3). 순서를 유지하고, 판 안에서 요리명이 겹치면 뒤의 것을 버린다.
+ * 후보 검사 전체 (구조 규칙 + 조건 의존 규칙). 순서를 유지하고, 판 안에서 요리명이 겹치면 뒤의 것을 버린다.
  * `existing`은 이미 판에 있는 후보(보충 합치기용) — 그 이름과 겹쳐도 버린다.
  */
 export function filterCandidates(

@@ -1,11 +1,11 @@
 import { norm } from "./normalize";
+import { AVOID_LIMIT } from "./presets";
 import type { Conditions, Recipe } from "./types";
 import { recheckCandidates } from "./validation";
 
-/** 피할 이름으로 보내는 최대 개수 (spec §5.7, 서버 한도와 같음) */
-export const AVOID_LIMIT = 50;
+export { AVOID_LIMIT };
 
-/** 후보판 상태 — 메모리에만 둔다 (spec §5.7) */
+/** 후보판 상태 — 메모리에만 둔다(새로고침하면 사라짐) */
 export type BoardState = {
   /** 현재 후보판 */
   candidates: Recipe[];
@@ -46,7 +46,7 @@ export function markShown(state: BoardState, id: string): BoardState {
   return { ...state, shownIds: [...state.shownIds, id] };
 }
 
-/** 조건이 바뀌면 남은 후보만 다시 검사해 안 맞는 것을 뺀다 (spec §5.8). 나온 후보는 그대로. */
+/** 조건이 바뀌면 남은 후보만 다시 검사해 안 맞는 것을 뺀다. 나온 후보는 그대로. */
 export function recheck(state: BoardState, cond: Conditions): BoardState {
   const keep = new Set(recheckCandidates(remaining(state), cond).map((r) => r.id));
   const candidates = state.candidates.filter((r) => state.shownIds.includes(r.id) || keep.has(r.id));
@@ -57,6 +57,14 @@ export function recheck(state: BoardState, cond: Conditions): BoardState {
 /** 새 요청에 보낼 피할 이름: 가장 최근 50개 */
 export function avoidNames(state: BoardState): string[] {
   return state.history.slice(-AVOID_LIMIT);
+}
+
+/**
+ * 룰렛이 멈춘 당첨을 지금 판 기준으로 확인한다.
+ * 회전 중 조건이 바뀌어 빠졌거나 이미 나온 후보면 null → 지금 판으로 다시 고른다.
+ */
+export function landedWinner(state: BoardState, id: string): Recipe | null {
+  return remaining(state).find((r) => r.id === id) ?? null;
 }
 
 export function nextAction(state: BoardState): NextAction {

@@ -21,7 +21,7 @@ type Props = {
   onUpdate: (u: Update) => void;
 };
 
-/** 재료/양념 태그 목록 + 직접 입력 (spec §5.2, §5.3) */
+/** 재료/양념 태그 목록 + 직접 입력 */
 export default function TagPicker({ settings, kind, onUpdate }: Props) {
   const what = kind === "ingredient" ? "재료" : "양념";
   return (

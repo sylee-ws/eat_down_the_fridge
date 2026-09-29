@@ -1,7 +1,7 @@
 import type { RecipeIngredient } from "./types";
 
 /**
- * 표시용 반올림 (spec §6.5, 조정 가능 기본값):
+ * 표시용 반올림 (조정 가능 기본값):
  * 10 미만은 0.5 단위, 10 이상은 정수, 결과가 0이면 0.5.
  * 인분이 같아도 표시·문구 단계에서 항상 적용한다.
  */
@@ -22,7 +22,7 @@ export function scaleIngredients(
   }));
 }
 
-/** 수량 표기: amount가 있으면 `{amount}{unit}`, null이면 `{unit}` (spec §5.10) */
+/** 수량 표기: amount가 있으면 `{amount}{unit}`, null이면 `{unit}` */
 export function formatQuantity(ing: Pick<RecipeIngredient, "amount" | "unit">): string {
   return ing.amount === null ? ing.unit : `${ing.amount}${ing.unit}`;
 }

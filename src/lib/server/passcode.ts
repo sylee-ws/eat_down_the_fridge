@@ -4,7 +4,7 @@ import { createHash, timingSafeEqual } from "node:crypto";
 const digest = (s: string) => createHash("sha256").update(s.normalize("NFC"), "utf8").digest();
 
 /**
- * 상수 시간 암호 비교 (spec §7.1). 문자열이 아니거나 정답이 비었으면 false.
+ * 상수 시간 암호 비교. 문자열이 아니거나 정답이 비었으면 false.
  * 한글은 NFC로 맞춘 뒤 UTF-8 바이트로 비교한다. 암호는 로그에 남기지 않는다.
  */
 export function passcodeMatches(input: unknown, expected: string): boolean {
