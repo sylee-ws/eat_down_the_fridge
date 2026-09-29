@@ -1,6 +1,6 @@
 import type { ProviderName } from "../config";
 
-/** AI에 넘기는 요청 조건 — 회사와 무관하게 같다 (spec §7.4) */
+/** AI에 넘기는 요청 조건 — 회사와 무관하게 같다 */
 export type PromptInput = {
   ingredients: string[];
   seasonings: string[];
@@ -14,7 +14,7 @@ export type PromptInput = {
 
 /**
  * 세 회사를 감싸는 공통 연결부.
- * generate는 구조화된 출력의 후보 원본 목록(§4 Recipe 모양, id 없음)을 돌려주고,
+ * generate는 구조화된 출력의 후보 원본 목록(Recipe 모양, id 없음)을 돌려주고,
  * 호출 실패·구조가 깨진 응답이면 AiError를 던진다.
  */
 export interface AiProvider {

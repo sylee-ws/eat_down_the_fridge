@@ -5,7 +5,7 @@ import type { PromptInput } from "./types";
 export const OUTPUT_NAME = "submit_candidates";
 
 /**
- * 응답 형식 (spec §4 Recipe에서 id를 뺀 것).
+ * 응답 형식 (Recipe에서 id를 뺀 것).
  * OpenAI strict 규칙(모든 속성 required, additionalProperties false)을 따르며 세 회사가 같이 쓴다.
  */
 export const CANDIDATES_SCHEMA = {
@@ -55,7 +55,7 @@ export const CANDIDATES_SCHEMA = {
 
 const list = (xs: string[]) => (xs.length === 0 ? "(없음)" : JSON.stringify(xs));
 
-/** 시스템 지시 + 사용자 조건 (spec §7.2 처리 1) */
+/** 시스템 지시 + 사용자 조건 */
 export function buildPrompt(input: PromptInput): { system: string; user: string } {
   const system = [
     "당신은 한국 가정의 저녁 메뉴를 제안하는 요리 도우미입니다.",

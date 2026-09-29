@@ -11,7 +11,7 @@
 | 서버: 암호 확인, 후보 생성, 1회 보충, 시간 예산, 설정 오류 차단 | 구현 + 자동 테스트 통과(가짜 AI) | `src/lib/server/*.test.ts` |
 | AI 회사 3곳 연결부(Claude·Gemini·GPT) | 구현 + 가짜 SDK 테스트 통과, **실제 API로는 미확인** | `src/lib/server/ai/providers.test.ts` |
 | 한 페이지 화면: 암호, 태그, 룰렛, 결과 카드, 공유·복사, 즐겨찾기 | 구현, 가짜 응답으로 흐름 수동 확인. 화면 컴포넌트 자동 테스트 없음 | — |
-| 빌드·실행 | `npm run typecheck`·`lint`·`test`(137개)·`build` 통과, 실행 후 `GET /` 200, 틀린 암호 401, 한글 암호 200, 잘못된 키로 후보 요청 502 확인 | — |
+| 빌드·실행 | `npm run typecheck`·`lint`·`test`(145개)·`build` 통과, 실행 후 `GET /` 200, 틀린 암호 401, 한글 암호 200, 잘못된 키로 후보 요청 502 확인 | — |
 | 배포 안내 | README, `.env.example` | — |
 
 ## 남은 것
