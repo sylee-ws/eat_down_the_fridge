@@ -47,7 +47,7 @@ async function copyText(text: string): Promise<boolean> {
   return legacyCopy(text);
 }
 
-/** 장바구니 공유·복사 (spec §5.10) */
+/** 장바구니 공유·복사 */
 export default function ShareButtons({ text, onToast }: Props) {
   const canShare = useCanShare();
 

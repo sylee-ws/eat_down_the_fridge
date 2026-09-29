@@ -7,7 +7,7 @@ type Props = { value: number; onChange: (n: number) => void; label?: string };
 
 const OPTIONS = Array.from({ length: MAX_SERVINGS - MIN_SERVINGS + 1 }, (_, i) => MIN_SERVINGS + i);
 
-/** 인분 1~4 선택 (spec §5.5) */
+/** 인분 1~4 선택 */
 export default function ServingsPicker({ value, onChange, label = "인분" }: Props) {
   return (
     <div className={styles.servings} role="radiogroup" aria-label={label}>

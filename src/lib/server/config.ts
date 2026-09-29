@@ -1,4 +1,4 @@
-// 서버 환경 변수 읽기 (spec §7). 이 값들은 절대 브라우저로 내려보내지 않는다.
+// 서버 환경 변수 읽기. 이 값들은 절대 브라우저로 내려보내지 않는다.
 
 export type Env = Record<string, string | undefined>;
 
@@ -6,8 +6,8 @@ export const PROVIDERS = ["anthropic", "google", "openai"] as const;
 export type ProviderName = (typeof PROVIDERS)[number];
 
 /**
- * 회사별 기본 모델 (spec §7.4).
- * - anthropic: spec 지정값
+ * 회사별 기본 모델.
+ * - anthropic: 처음 요구 사항에서 정한 값
  * - google: ai.google.dev/gemini-api/docs/models 에서 확인한 Flash 계열 소형 모델
  * - openai: @openai SDK ChatModel 목록 + developers.openai.com/api/docs/models/gpt-5.4-mini 에서 확인
  */

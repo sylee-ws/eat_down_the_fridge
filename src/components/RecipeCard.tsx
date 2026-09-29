@@ -27,7 +27,7 @@ type Props = {
   headingId?: string;
 };
 
-/** 레시피 카드 (spec §5.9) — 결과 카드와 즐겨찾기 카드가 함께 쓴다 */
+/** 레시피 카드 — 결과 카드와 즐겨찾기 카드가 함께 쓴다 */
 export default function RecipeCard({
   recipe,
   servings,

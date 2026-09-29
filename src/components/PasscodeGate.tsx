@@ -11,7 +11,7 @@ type Props = {
   expired?: boolean;
 };
 
-/** 가족 암호 입력 화면 (spec §5.1) */
+/** 가족 암호 입력 화면 */
 export default function PasscodeGate({ onVerified, expired = false }: Props) {
   const [value, setValue] = useState("");
   const [busy, setBusy] = useState(false);

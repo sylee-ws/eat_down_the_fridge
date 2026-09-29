@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { Conditions, Favorite } from "@/lib/types";
 import RecipeCard from "./RecipeCard";
 import styles from "./ui.module.css";
@@ -15,13 +15,19 @@ type Props = {
   onToast: (msg: string) => void;
 };
 
-/** 즐겨찾기를 겹쳐 뜨는 카드로 보기 (spec §5.11). 인분 조절은 저장값을 바꾸지 않는다. */
+/** 즐겨찾기를 겹쳐 뜨는 카드로 보기. 인분 조절은 저장값을 바꾸지 않는다. */
 export default function FavoriteModal({ favorite, isSaved, have, onToggleFavorite, onClose, onToast }: Props) {
   const [servings, setServings] = useState(favorite.savedServings);
+  // 부모가 매번 새 onClose를 넘겨도 아래 효과가 다시 돌지 않게 ref로 읽는다
+  const onCloseRef = useRef(onClose);
+
+  useEffect(() => {
+    onCloseRef.current = onClose;
+  }, [onClose]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
+      if (e.key === "Escape") onCloseRef.current();
     };
     window.addEventListener("keydown", onKey);
     const prev = document.body.style.overflow;
@@ -30,7 +36,7 @@ export default function FavoriteModal({ favorite, isSaved, have, onToggleFavorit
       window.removeEventListener("keydown", onKey);
       document.body.style.overflow = prev;
     };
-  }, [onClose]);
+  }, []);
 
   return (
     <div

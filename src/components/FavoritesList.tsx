@@ -14,7 +14,7 @@ function formatDate(iso: string): string {
   return Number.isNaN(d.getTime()) ? "" : `${d.getMonth() + 1}월 ${d.getDate()}일 저장`;
 }
 
-/** 즐겨찾기 목록 — 최근 저장 순 (spec §5.11) */
+/** 즐겨찾기 목록 — 최근 저장 순 */
 export default function FavoritesList({ favorites, onOpen, onRemove }: Props) {
   const sorted = [...favorites].sort((a, b) => b.savedAt.localeCompare(a.savedAt));
   return (

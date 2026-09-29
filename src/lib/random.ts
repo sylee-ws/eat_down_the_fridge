@@ -1,4 +1,4 @@
-/** 0 이상 n 미만 정수를 균등 확률로 뽑는다 (룰렛 당첨, spec §5.6) */
+/** 0 이상 n 미만 정수를 균등 확률로 뽑는다 (룰렛 당첨) */
 export function pickUniformIndex(n: number, rand: () => number = secureRandom): number {
   if (!Number.isInteger(n) || n <= 0) throw new Error("n must be a positive integer");
   return Math.min(n - 1, Math.floor(rand() * n));

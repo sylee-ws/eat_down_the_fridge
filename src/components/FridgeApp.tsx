@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { requestCandidates } from "@/lib/api";
-import { avoidNames, emptyBoard, markShown, newBoard, nextAction, recheck, remaining, type BoardState } from "@/lib/board";
+import { avoidNames, emptyBoard, landedWinner, markShown, newBoard, nextAction, recheck, remaining, type BoardState } from "@/lib/board";
 import { LIST_LIMIT } from "@/lib/presets";
 import { pickUniformIndex } from "@/lib/random";
 import {
@@ -50,13 +50,13 @@ const sameConditions = (a: Settings, b: Settings) =>
   a.ownedSeasonings === b.ownedSeasonings &&
   a.exclusions === b.exclusions;
 
-/** 한 페이지 앱 전체 흐름 (spec §5) */
+/** 한 페이지 앱 전체 흐름 */
 export default function FridgeApp() {
   const [settings, setSettingsState] = useState<Settings | null>(null);
   const settingsRef = useRef<Settings | null>(null);
   const [expired, setExpired] = useState(false);
 
-  // 후보판·현재 결과는 메모리에만 (spec §5.7)
+  // 후보판·현재 결과는 메모리에만 (새로고침하면 사라짐)
   const [board, setBoardState] = useState<BoardState>(emptyBoard);
   const boardRef = useRef<BoardState>(board);
   const [phase, setPhase] = useState<Phase>("idle");
@@ -93,7 +93,7 @@ export default function FridgeApp() {
     setBoardState(b);
   };
 
-  /** 설정 변경: 즉시 저장, 안내 표시, 조건이 바뀌면 후보판 재검사 (spec §5.8) */
+  /** 설정 변경: 즉시 저장, 안내 표시, 조건이 바뀌면 후보판 재검사 */
   const apply = (u: Update) => {
     const prev = settingsRef.current;
     const next = u.settings;
@@ -114,7 +114,7 @@ export default function FridgeApp() {
     setPhase("result");
   };
 
-  /** 남은 후보로 룰렛/바로 결과/빈 판 (spec §5.6, §5.7) */
+  /** 남은 후보로 룰렛(2개 이상)/바로 결과(1개)/빈 판(0개) */
   const play = (b: BoardState, fresh: boolean) => {
     const rem = remaining(b);
     const action = nextAction(b);
@@ -131,9 +131,13 @@ export default function FridgeApp() {
     }
   };
 
+  /** 멈춘 당첨이 지금 판에 아직 남아 있을 때만 결과로. 회전 중 조건 변경으로 빠졌으면 지금 판으로 다시 고른다. */
   const onLanded = (i: number) => {
+    const b = boardRef.current;
     const r = spin.recipes[i];
-    if (r) show(r);
+    const hit = r ? landedWinner(b, r.id) : null;
+    if (hit) show(hit);
+    else play(b, false);
   };
 
   /** 새 후보 요청 — 이번 사용 중 판에 올랐던 이름을 피할 이름으로 보낸다 */

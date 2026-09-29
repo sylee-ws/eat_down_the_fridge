@@ -2,7 +2,7 @@ import type { Recipe } from "./types";
 
 type FetchLike = (input: string, init?: RequestInit) => Promise<Response>;
 
-/** POST /api/candidates 본문 (spec §7.2) */
+/** POST /api/candidates 본문 */
 export type CandidatesBody = {
   passcode: string;
   ingredients: string[];
@@ -13,7 +13,7 @@ export type CandidatesBody = {
 };
 
 /**
- * 화면이 할 일로 바꾼 결과 (spec §7.3)
+ * 화면이 할 일로 바꾼 결과
  * unauthorized: 암호 삭제 후 암호 화면 / retry: "다시 시도" / problem: "문제가 생겼어요"
  */
 export type CandidatesOutcome =

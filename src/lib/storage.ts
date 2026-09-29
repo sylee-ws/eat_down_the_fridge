@@ -1,4 +1,5 @@
 import { norm } from "./normalize";
+import { LIST_LIMIT, NAME_MAX_LENGTH } from "./presets";
 import { clampServings, defaultSettings, type Settings } from "./settings";
 import type { Favorite, Recipe, RecipeIngredient } from "./types";
 
@@ -9,14 +10,18 @@ type StorageLike = Pick<Storage, "getItem" | "setItem">;
 const isObj = (v: unknown): v is Record<string, unknown> =>
   typeof v === "object" && v !== null && !Array.isArray(v);
 
-/** 문자열 배열만 받고, 정규화 후 빈 값·중복은 버린다 */
-function strings(v: unknown): string[] | null {
+/**
+ * 문자열 배열만 받고, 정규화 후 빈 값·중복·20자 넘는 이름은 버린다.
+ * limit이 있으면 앞에서부터 그 개수만 (한도 넘는 저장값으로 요청이 계속 400이 되지 않게).
+ */
+function strings(v: unknown, limit = Infinity): string[] | null {
   if (!Array.isArray(v)) return null;
   const out: string[] = [];
   for (const x of v) {
+    if (out.length >= limit) break;
     if (typeof x !== "string") continue;
     const n = norm(x);
-    if (n.length > 0 && !out.includes(n)) out.push(n);
+    if (n.length > 0 && Array.from(n).length <= NAME_MAX_LENGTH && !out.includes(n)) out.push(n);
   }
   return out;
 }
@@ -54,8 +59,8 @@ function favorites(v: unknown): Favorite[] | null {
 }
 
 /**
- * 저장값 해석 (spec §6.6): 없거나 JSON이 깨졌거나 버전이 다르면 기본값.
- * 일부 칸만 이상하면 그 칸만 기본값으로 둔다.
+ * 저장값 해석: 없거나 JSON이 깨졌거나 버전이 다르면 기본값.
+ * 일부 칸만 이상하면 그 칸만 기본값으로 둔다. 선택 재료·양념·제외는 30개까지만 남긴다.
  */
 export function parseSettings(raw: string | null): Settings {
   const d = defaultSettings();
@@ -69,11 +74,11 @@ export function parseSettings(raw: string | null): Settings {
   if (!isObj(data) || data.version !== 1) return d;
   return {
     version: 1,
-    selectedIngredients: strings(data.selectedIngredients) ?? d.selectedIngredients,
+    selectedIngredients: strings(data.selectedIngredients, LIST_LIMIT) ?? d.selectedIngredients,
     customIngredients: strings(data.customIngredients) ?? d.customIngredients,
-    ownedSeasonings: strings(data.ownedSeasonings) ?? d.ownedSeasonings,
+    ownedSeasonings: strings(data.ownedSeasonings, LIST_LIMIT) ?? d.ownedSeasonings,
     customSeasonings: strings(data.customSeasonings) ?? d.customSeasonings,
-    exclusions: strings(data.exclusions) ?? d.exclusions,
+    exclusions: strings(data.exclusions, LIST_LIMIT) ?? d.exclusions,
     servings: typeof data.servings === "number" ? clampServings(data.servings) : d.servings,
     favorites: favorites(data.favorites) ?? d.favorites,
     passcode: typeof data.passcode === "string" && data.passcode.length > 0 ? data.passcode : null,
