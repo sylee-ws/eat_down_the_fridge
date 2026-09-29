@@ -20,7 +20,7 @@ AI 사용료는 고른 회사의 키 주인에게 청구돼요. 가족끼리 쓰
 
 | 이름 | 뜻 | 예시 |
 |---|---|---|
-| `FAMILY_PASSCODE` | **필수.** 가족 공용 암호. 한글도 돼요. | `우리집냉장고` |
+| `FAMILY_PASSCODE` | **필수.** 가족 공용 암호. 한글도 돼요. 틀린 암호를 여러 번 넣어도 막지 않으니, 남이 짐작하기 어려운 문장으로 정하세요. | `우리집냉장고는언제나배고파` |
 | `AI_PROVIDER` | 쓸 AI 회사. `anthropic` / `google` / `openai` 중 하나. 비우면 `anthropic`. | `google` |
 | `AI_MODEL` | 모델 이름. 비우면 회사별 기본(빠르고 저렴한) 모델. | (비워 두기) |
 | `ANTHROPIC_API_KEY` | Claude 키 (`AI_PROVIDER=anthropic`일 때) | |
