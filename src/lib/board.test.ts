@@ -10,7 +10,7 @@ function recipe(id: string, name: string, ingNames: string[] = ["계란"]): Reci
     prepMinutes: 5,
     servings: 2,
     ingredients: ingNames.map((n) => ({ name: n, amount: 1, unit: "개" })),
-    steps: ["a", "b", "c"],
+    steps: ["a", "b", "c", "d"],
   };
 }
 

@@ -1,4 +1,4 @@
-import { MAX_COOK_MINUTES, MAX_MISSING, MAX_PREP_MINUTES } from "@/lib/validation";
+import { MAX_COOK_MINUTES, MAX_MISSING, MAX_PREP_MINUTES, MAX_STEPS, MIN_STEPS } from "@/lib/validation";
 import type { PromptInput } from "./types";
 
 /** 구조화된 출력 도구/형식 이름 */
@@ -40,7 +40,7 @@ export const CANDIDATES_SCHEMA = {
           },
           steps: {
             type: "array",
-            description: "조리 순서 3~4단계",
+            description: `조리 순서 ${MIN_STEPS}~${MAX_STEPS}단계. 각 단계에 불 세기·시간·상태 확인 요령 포함`,
             items: { type: "string" },
           },
         },
@@ -63,7 +63,7 @@ export function buildPrompt(input: PromptInput): { system: string; user: string 
     "규칙:",
     "- 집밥 위주로 하되 요리 종류(한식·양식·중식 등)는 제한하지 않는다.",
     `- 불 사용 시간(cookMinutes)은 ${MAX_COOK_MINUTES}분 이내, 손질 시간(prepMinutes)은 ${MAX_PREP_MINUTES}분 이내의 정수.`,
-    "- 조리 순서(steps)는 3~4단계.",
+    `- 조리 순서(steps)는 ${MIN_STEPS}~${MAX_STEPS}단계. 요리를 처음 하는 사람도 따라 할 수 있게, 각 단계에 불 세기(약불·중불·센불), 대략적인 시간, 다 됐는지 보는 법(예: "계란 가장자리가 익으면") 같은 요령을 한두 문장으로 넣는다.`,
     "- 선택 재료를 가능한 한 많이 쓰되, 후보마다 재료 조합이 달라도 된다. 모든 후보는 선택 재료를 1개 이상 써야 한다.",
     "- 사용자의 재료·양념을 쓸 때는 사용자가 쓴 이름을 글자 그대로 재료 이름(name)에 쓴다.",
     `- "가진 것"(선택 재료, 보유 양념, 물) 밖의 재료는 후보마다 ${MAX_MISSING}개 이하.`,

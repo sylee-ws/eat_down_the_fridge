@@ -16,7 +16,7 @@ const recipe = (over: Partial<Recipe> = {}): Recipe => ({
   prepMinutes: 5,
   servings: 2,
   ingredients: [ing("대파"), ing("계란", 2), ing("간장", 1, "큰술")],
-  steps: ["대파를 썬다", "계란을 푼다", "볶는다"],
+  steps: ["대파를 썬다", "계란을 푼다", "팬을 달군다", "볶는다"],
   ...over,
 });
 
@@ -82,12 +82,12 @@ describe("후보 검사", () => {
     expect(ok(recipe({ prepMinutes: 11 }))).toBe(false);
   });
 
-  it("조리 단계는 3~4개만", () => {
-    expect(ok(recipe({ steps: ["a", "b"] }))).toBe(false);
-    expect(ok(recipe({ steps: ["a", "b", "c"] }))).toBe(true);
+  it("조리 단계는 4~6개만", () => {
+    expect(ok(recipe({ steps: ["a", "b", "c"] }))).toBe(false);
     expect(ok(recipe({ steps: ["a", "b", "c", "d"] }))).toBe(true);
-    expect(ok(recipe({ steps: ["a", "b", "c", "d", "e"] }))).toBe(false);
-    expect(ok(recipe({ steps: ["a", " ", "c"] }))).toBe(false);
+    expect(ok(recipe({ steps: ["a", "b", "c", "d", "e", "f"] }))).toBe(true);
+    expect(ok(recipe({ steps: ["a", "b", "c", "d", "e", "f", "g"] }))).toBe(false);
+    expect(ok(recipe({ steps: ["a", " ", "c", "d"] }))).toBe(false);
   });
 
   it("부족 재료 3개는 통과, 4개는 탈락", () => {

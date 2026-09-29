@@ -7,6 +7,8 @@ export const MAX_COOK_MINUTES = 15;
 export const MAX_PREP_MINUTES = 10;
 export const MAX_MISSING = 3;
 export const MAX_DISH_NAME_LENGTH = 40;
+export const MIN_STEPS = 4;
+export const MAX_STEPS = 6;
 
 const isObj = (v: unknown): v is Record<string, unknown> =>
   typeof v === "object" && v !== null && !Array.isArray(v);
@@ -44,13 +46,13 @@ export function toRecipe(raw: unknown, id: string, servings: number): Recipe | n
 
 const intIn = (v: number, min: number, max: number) => Number.isInteger(v) && v >= min && v <= max;
 
-/** 생성 시점 구조 규칙(요리명 40자·피할 이름, 불 15분·손질 10분, 3~4단계, 재료 모양) — 판 내 중복은 filterCandidates */
+/** 생성 시점 구조 규칙(요리명 40자·피할 이름, 불 15분·손질 10분, 4~6단계, 재료 모양) — 판 내 중복은 filterCandidates */
 export function checkStructural(recipe: Recipe, avoidDishNames: string[]): boolean {
   const n = norm(recipe.name);
   if (n.length === 0 || Array.from(n).length > MAX_DISH_NAME_LENGTH) return false;
   if (!intIn(recipe.cookMinutes, 0, MAX_COOK_MINUTES)) return false;
   if (!intIn(recipe.prepMinutes, 0, MAX_PREP_MINUTES)) return false;
-  if (recipe.steps.length < 3 || recipe.steps.length > 4) return false;
+  if (recipe.steps.length < MIN_STEPS || recipe.steps.length > MAX_STEPS) return false;
   if (recipe.steps.some((s) => s.trim().length === 0)) return false;
   if (recipe.ingredients.length === 0) return false;
   for (const ing of recipe.ingredients) {
