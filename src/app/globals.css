@@ -1,0 +1,50 @@
+:root {
+  --background: #fffaf3;
+  --foreground: #2b2118;
+  --muted: #8a7b6c;
+  --accent: #ff7a3d;
+  --accent-soft: #ffe3d3;
+  --card: #ffffff;
+  --border: #eadfd2;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #1c1814;
+    --foreground: #f3ebe2;
+    --muted: #a8998a;
+    --accent: #ff8a52;
+    --accent-soft: #4a2e20;
+    --card: #26211c;
+    --border: #3a322a;
+  }
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+body {
+  min-height: 100dvh;
+  color: var(--foreground);
+  background: var(--background);
+  font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard", "Noto Sans KR", "Malgun Gothic", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+}
+
+input {
+  font: inherit;
+}
