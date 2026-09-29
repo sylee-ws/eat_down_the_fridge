@@ -47,7 +47,7 @@ const intIn = (v: number, min: number, max: number) => Number.isInteger(v) && v 
 /** 생성 시점 규칙 1~5 중 한 후보만 보고 판정 가능한 것 (판 내 중복은 filterCandidates) — spec §6.3 */
 export function checkStructural(recipe: Recipe, avoidDishNames: string[]): boolean {
   const n = norm(recipe.name);
-  if (n.length === 0 || n.length > MAX_DISH_NAME_LENGTH) return false;
+  if (n.length === 0 || Array.from(n).length > MAX_DISH_NAME_LENGTH) return false;
   if (!intIn(recipe.cookMinutes, 0, MAX_COOK_MINUTES)) return false;
   if (!intIn(recipe.prepMinutes, 0, MAX_PREP_MINUTES)) return false;
   if (recipe.steps.length < 3 || recipe.steps.length > 4) return false;
