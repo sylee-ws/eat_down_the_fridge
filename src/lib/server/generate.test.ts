@@ -50,7 +50,7 @@ describe("generateCandidates", () => {
       raw({ name: "가".repeat(41) }), // 요리명 40자 초과
       raw({ name: "오래걸림", cookMinutes: 16 }),
       raw({ name: "손질오래", prepMinutes: 11 }),
-      raw({ name: "단계부족", steps: ["a", "b"] }),
+      raw({ name: "단계부족", steps: ["a", "b", "c"] }),
       raw({ name: "선택재료없음", ingredients: [{ name: "간장", amount: 1, unit: "큰술" }] }),
       raw({
         name: "부족재료많음",

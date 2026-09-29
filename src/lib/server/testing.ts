@@ -21,7 +21,7 @@ export const raw = (over: Partial<RawRecipe> = {}): RawRecipe => ({
     { name: "계란", amount: 2, unit: "개" },
     { name: "간장", amount: 1, unit: "큰술" },
   ],
-  steps: ["대파를 썬다", "계란을 푼다", "볶는다"],
+  steps: ["대파를 썬다", "계란을 푼다", "팬을 달군다", "볶는다"],
   ...over,
 });
 

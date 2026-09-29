@@ -56,7 +56,7 @@ type Recipe = {
   prepMinutes: number;   // 정수 0~10 (손질)
   servings: number;      // 요청한 servings와 항상 같음
   ingredients: { name: string; amount: number | null; unit: string }[]; // 1개 이상, amount는 null 또는 > 0
-  steps: string[];       // 3~4개
+  steps: string[];       // 4~6개
 };
 ```
 

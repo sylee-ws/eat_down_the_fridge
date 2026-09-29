@@ -25,7 +25,7 @@ const recipe = (id: string): Recipe => ({
   prepMinutes: 3,
   servings: 2,
   ingredients: [{ name: "계란", amount: 2, unit: "개" }],
-  steps: ["a", "b", "c"],
+  steps: ["a", "b", "c", "d"],
 });
 
 const base = (over: Partial<Settings> = {}): Settings => ({ ...defaultSettings(), ...over });

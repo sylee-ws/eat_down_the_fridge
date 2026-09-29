@@ -18,7 +18,7 @@ export type Recipe = {
   /** 수량의 기준 인분(1~4) */
   servings: number;
   ingredients: RecipeIngredient[];
-  /** 조리 순서 3~4단계 */
+  /** 조리 순서 4~6단계 */
   steps: string[];
 };
 
